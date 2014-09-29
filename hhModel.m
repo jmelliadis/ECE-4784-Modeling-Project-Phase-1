@@ -1,4 +1,4 @@
-function hhSteadyState()
+function hhModel(impulseTime)
 
 simTime = 100000;
 gK = 36;
@@ -12,7 +12,7 @@ Cm = 1.0;
 
 V = [];
 V(1) = 0;
-I = [5*ones(50), zeros(100000-50)];
+I = [500*ones(1,impulseTime*1000), zeros(1,100001-impulseTime*1000)];
 Iion = [];
 INa = [];
 IK = [];
@@ -32,11 +32,11 @@ m(1) = alpham/(alpham + betam);
 n(1) = alphan/(alphan + betan);
 h(1) = alphah/(alphah + betah);
 
-INa(1) = m(1)^3*gNa*h(1)*(V(1)-ENa)
-IK(1) = n(1)^4*gK*(V(1)-EK)
-IL(1) = gL*(V(1)-EL)
+INa(1) = m(1)^3*gNa*h(1)*(V(1)-ENa);
+IK(1) = n(1)^4*gK*(V(1)-EK);
+IL(1) = gL*(V(1)-EL);
 
-Iion(1) = I(1) - IK(1) - INa(1) - IL(1)
+Iion(1) = I(1) - IK(1) - INa(1) - IL(1);
 
 for tt=2:simTime+1,
     alpham = 0.1*((25-V(tt-1))/(exp((25-V(tt-1))/10)-1));
@@ -64,12 +64,14 @@ end
 
 plot(0:1:simTime, V-70);
 figure
-plot(0:1:simTime, m);
-figure
-plot(0:1:simTime, n);
-figure
-plot(0:1:simTime, h);
-figure
-plot(0:1:simTime, Iion);
+plot(0:1:simTime, m.^3*gNa.*h, 0:1:simTime, n.^4*gK)
+%figure
+%plot(0:1:simTime, m);
+%figure
+%plot(0:1:simTime, n);
+%figure
+%plot(0:1:simTime, h);
+%figure
+%plot(0:1:simTime, Iion);
 
 end
