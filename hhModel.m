@@ -1,4 +1,4 @@
-function hhModel(impulseTime)
+function hhModel(impulseTime, amp)
 
 simTime = 100000; %total simulation time 100 ms with 1/1000 ms steps
 gK = 36;
@@ -12,7 +12,7 @@ Cm = 1.0;
 
 V = [];
 V(1) = 0; %assume resting potential is 0 and then shift total response array down by Vrest later
-I = [50*ones(1,impulseTime*1000), zeros(1,100001-impulseTime*1000)]; %determine input current based off of impulseTime Parameter
+I = [amp*ones(1,impulseTime*1000), zeros(1,100001-impulseTime*1000)]; %determine input current based off of impulseTime Parameter
 Iion = [];
 INa = [];
 IK = [];
@@ -68,11 +68,18 @@ for tt=2:simTime+1, %loop through all values of time
 end
 
 %plot Vm versus time
-plot(0:1:simTime, V-70);
+plot(0:1/1000:simTime/1000, V-70);
+xlabel('Time (ms)');
+ylabel('Voltage (mV)');
+title('Membrane Potential');
 
 %plot gNa and gK versus time
 figure
-plot(0:1:simTime, m.^3*gNa.*h, 0:1:simTime, n.^4*gK)
+plot(0:1/1000:simTime/1000, m.^3*gNa.*h, 0:1/1000:simTime/1000, n.^4*gK)
+xlabel('Time (ms)');
+ylabel('Conductance (mS/cm^2)');
+legend('gNa', 'gK');
+title('gNa and gK');
 %figure
 %plot(0:1:simTime, m);
 %figure
